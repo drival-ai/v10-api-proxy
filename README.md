@@ -1,4 +1,4 @@
-[![main](https://github.com/drival-ai/v10-mvp-api-proxy/actions/workflows/main.yml/badge.svg)](https://github.com/drival-ai/v10-mvp-api-proxy/actions/workflows/main.yml)
+[![main](https://github.com/drival-ai/v10-api-proxy/actions/workflows/main.yml/badge.svg)](https://github.com/drival-ai/v10-api-proxy/actions/workflows/main.yml)
 
 Simple test:
 
