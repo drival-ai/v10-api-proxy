@@ -1,4 +1,4 @@
-module github.com/drival-ai/v10-mvp-api-proxy
+module github.com/drival-ai/v10-api-proxy
 
 go 1.24.1
 

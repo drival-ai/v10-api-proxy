@@ -51,8 +51,8 @@ func main() {
 		method string, req interface{}, reply interface{}, cc *grpc.ClientConn,
 		invoker grpc.UnaryInvoker, opts ...grpc.CallOption,
 	) error {
-		ctx = metadata.AppendToOutgoingContext(ctx, "service-name", "v10-mvp-api")
-		ctx = metadata.AppendToOutgoingContext(ctx, "x-grpc-gateway-proxy", "v10-mvp-api-proxy")
+		ctx = metadata.AppendToOutgoingContext(ctx, "service-name", "v10-api")
+		ctx = metadata.AppendToOutgoingContext(ctx, "x-grpc-gateway-proxy", "v10-api-proxy")
 		return invoker(ctx, method, req, reply, cc, opts...)
 	}))
 
@@ -60,8 +60,8 @@ func main() {
 		desc *grpc.StreamDesc, cc *grpc.ClientConn, method string,
 		streamer grpc.Streamer, opts ...grpc.CallOption,
 	) (grpc.ClientStream, error) {
-		ctx = metadata.AppendToOutgoingContext(ctx, "service-name", "v10-mvp-api")
-		ctx = metadata.AppendToOutgoingContext(ctx, "x-grpc-gateway-proxy", "v10-mvp-api-proxy")
+		ctx = metadata.AppendToOutgoingContext(ctx, "service-name", "v10-api")
+		ctx = metadata.AppendToOutgoingContext(ctx, "x-grpc-gateway-proxy", "v10-api-proxy")
 		return streamer(ctx, desc, cc, method, opts...)
 	}))
 

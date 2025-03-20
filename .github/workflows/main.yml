@@ -34,6 +34,6 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         make
-        cp bin/v10-mvp-api-proxy .
-        tar czvf v10-mvp-api-proxy-${GITHUB_REF_NAME}-x86_64-linux.tar.gz v10-mvp-api-proxy
+        cp bin/v10-api-proxy .
+        tar czvf v10-api-proxy-${GITHUB_REF_NAME}-x86_64-linux.tar.gz v10-api-proxy
         gh release create ${GITHUB_REF_NAME} ./*.tar.gz --generate-notes
