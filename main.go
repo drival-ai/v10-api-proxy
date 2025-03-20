@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"github.com/drival-ai/v10-go/iam/v1"
+
+	"github.com/drival-ai/v10-go/base/v1"
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -86,6 +88,10 @@ func main() {
 	err = iam.RegisterIamHandler(context.Background(), mux, conn)
 	if err != nil {
 		glog.Fatalf("RegisterCostHandler failed: %v", err)
+	}
+	err = base.RegisterV10Handler(context.Background(), mux, conn)
+	if err != nil {
+		glog.Fatalf("RegisterBaseHandler failed: %v", err)
 	}
 
 	trialForceCors := true // let's see if this works
