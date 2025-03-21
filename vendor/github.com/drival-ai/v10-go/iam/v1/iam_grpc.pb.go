@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	Iam_Login_FullMethodName  = "/v10proto.iam.v1.Iam/Login"
-	Iam_WhoAmI_FullMethodName = "/v10proto.iam.v1.Iam/WhoAmI"
+	Iam_Register_FullMethodName = "/v10proto.iam.v1.Iam/Register"
+	Iam_Login_FullMethodName    = "/v10proto.iam.v1.Iam/Login"
+	Iam_WhoAmI_FullMethodName   = "/v10proto.iam.v1.Iam/WhoAmI"
 )
 
 // IamClient is the client API for Iam service.
@@ -29,8 +30,10 @@ const (
 //
 // Iam service definition.
 type IamClient interface {
-	// Create an account for the V10 Platform.
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (Iam_LoginClient, error)
+	// Register an account.
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
+	// Login an account.
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// Testing endpoint.
 	WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grpc.CallOption) (*WhoAmIResponse, error)
 }
@@ -43,37 +46,24 @@ func NewIamClient(cc grpc.ClientConnInterface) IamClient {
 	return &iamClient{cc}
 }
 
-func (c *iamClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (Iam_LoginClient, error) {
+func (c *iamClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &Iam_ServiceDesc.Streams[0], Iam_Login_FullMethodName, cOpts...)
+	out := new(RegisterResponse)
+	err := c.cc.Invoke(ctx, Iam_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &iamLoginClient{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
+	return out, nil
 }
 
-type Iam_LoginClient interface {
-	Recv() (*LoginResponse, error)
-	grpc.ClientStream
-}
-
-type iamLoginClient struct {
-	grpc.ClientStream
-}
-
-func (x *iamLoginClient) Recv() (*LoginResponse, error) {
-	m := new(LoginResponse)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
+func (c *iamClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, Iam_Login_FullMethodName, in, out, cOpts...)
+	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
 func (c *iamClient) WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grpc.CallOption) (*WhoAmIResponse, error) {
@@ -92,8 +82,10 @@ func (c *iamClient) WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grpc.
 //
 // Iam service definition.
 type IamServer interface {
-	// Create an account for the V10 Platform.
-	Login(*LoginRequest, Iam_LoginServer) error
+	// Register an account.
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	// Login an account.
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// Testing endpoint.
 	WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIResponse, error)
 	mustEmbedUnimplementedIamServer()
@@ -103,8 +95,11 @@ type IamServer interface {
 type UnimplementedIamServer struct {
 }
 
-func (UnimplementedIamServer) Login(*LoginRequest, Iam_LoginServer) error {
-	return status.Errorf(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedIamServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedIamServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedIamServer) WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhoAmI not implemented")
@@ -122,25 +117,40 @@ func RegisterIamServer(s grpc.ServiceRegistrar, srv IamServer) {
 	s.RegisterService(&Iam_ServiceDesc, srv)
 }
 
-func _Iam_Login_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(LoginRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _Iam_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(IamServer).Login(m, &iamLoginServer{ServerStream: stream})
+	if interceptor == nil {
+		return srv.(IamServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Iam_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IamServer).Register(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
-type Iam_LoginServer interface {
-	Send(*LoginResponse) error
-	grpc.ServerStream
-}
-
-type iamLoginServer struct {
-	grpc.ServerStream
-}
-
-func (x *iamLoginServer) Send(m *LoginResponse) error {
-	return x.ServerStream.SendMsg(m)
+func _Iam_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IamServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Iam_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IamServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Iam_WhoAmI_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -169,16 +179,18 @@ var Iam_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*IamServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "Register",
+			Handler:    _Iam_Register_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _Iam_Login_Handler,
+		},
+		{
 			MethodName: "WhoAmI",
 			Handler:    _Iam_WhoAmI_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "Login",
-			Handler:       _Iam_Login_Handler,
-			ServerStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "iam/v1/iam.proto",
 }
