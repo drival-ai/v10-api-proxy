@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion8
 const (
 	V10_Do_FullMethodName              = "/v10proto.base.v1.V10/Do"
 	V10_RegisterVehicle_FullMethodName = "/v10proto.base.v1.V10/RegisterVehicle"
+	V10_ListVehicles_FullMethodName    = "/v10proto.base.v1.V10/ListVehicles"
 )
 
 // V10Client is the client API for V10 service.
@@ -32,7 +33,10 @@ const (
 type V10Client interface {
 	// Testing endpoint.
 	Do(ctx context.Context, in *DoRequest, opts ...grpc.CallOption) (*DoResponse, error)
+	// Vehicle manual registration endpoint.
 	RegisterVehicle(ctx context.Context, in *RegisterVehicleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// List vehicles owned by the user.
+	ListVehicles(ctx context.Context, in *ListVehiclesRequest, opts ...grpc.CallOption) (*ListVehiclesResponse, error)
 }
 
 type v10Client struct {
@@ -63,6 +67,16 @@ func (c *v10Client) RegisterVehicle(ctx context.Context, in *RegisterVehicleRequ
 	return out, nil
 }
 
+func (c *v10Client) ListVehicles(ctx context.Context, in *ListVehiclesRequest, opts ...grpc.CallOption) (*ListVehiclesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListVehiclesResponse)
+	err := c.cc.Invoke(ctx, V10_ListVehicles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V10Server is the server API for V10 service.
 // All implementations must embed UnimplementedV10Server
 // for forward compatibility
@@ -71,7 +85,10 @@ func (c *v10Client) RegisterVehicle(ctx context.Context, in *RegisterVehicleRequ
 type V10Server interface {
 	// Testing endpoint.
 	Do(context.Context, *DoRequest) (*DoResponse, error)
+	// Vehicle manual registration endpoint.
 	RegisterVehicle(context.Context, *RegisterVehicleRequest) (*emptypb.Empty, error)
+	// List vehicles owned by the user.
+	ListVehicles(context.Context, *ListVehiclesRequest) (*ListVehiclesResponse, error)
 	mustEmbedUnimplementedV10Server()
 }
 
@@ -84,6 +101,9 @@ func (UnimplementedV10Server) Do(context.Context, *DoRequest) (*DoResponse, erro
 }
 func (UnimplementedV10Server) RegisterVehicle(context.Context, *RegisterVehicleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterVehicle not implemented")
+}
+func (UnimplementedV10Server) ListVehicles(context.Context, *ListVehiclesRequest) (*ListVehiclesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListVehicles not implemented")
 }
 func (UnimplementedV10Server) mustEmbedUnimplementedV10Server() {}
 
@@ -134,6 +154,24 @@ func _V10_RegisterVehicle_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V10_ListVehicles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListVehiclesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V10Server).ListVehicles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V10_ListVehicles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V10Server).ListVehicles(ctx, req.(*ListVehiclesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V10_ServiceDesc is the grpc.ServiceDesc for V10 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -148,6 +186,10 @@ var V10_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterVehicle",
 			Handler:    _V10_RegisterVehicle_Handler,
+		},
+		{
+			MethodName: "ListVehicles",
+			Handler:    _V10_ListVehicles_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
