@@ -1,5 +1,5 @@
-github.com/drival-ai/v10-go v0.1.6 h1:zVTyoW2UTeOinKmOviKXLNLXPeZTKQyWVUX2rCn9eCc=
-github.com/drival-ai/v10-go v0.1.6/go.mod h1:6H/koS+6TQbgPE14Owt2FDSPgrZXhOiaNcBDTX3nmtg=
+github.com/drival-ai/v10-go v0.1.7 h1:r+Su6QoiZ19BpUw1ivOprtx1UFXFJ4GgWyduYSKYLdo=
+github.com/drival-ai/v10-go v0.1.7/go.mod h1:6H/koS+6TQbgPE14Owt2FDSPgrZXhOiaNcBDTX3nmtg=
 github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
 github.com/go-logr/logr v1.4.2/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=
