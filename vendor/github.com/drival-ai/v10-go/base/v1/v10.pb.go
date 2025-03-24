@@ -273,6 +273,60 @@ func (x *DeleteVehicleRequest) GetVin() string {
 	return ""
 }
 
+type UpdateVehicleRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Required. Vehicle Identification Number (VIN) to update.
+	Vin string `protobuf:"bytes,1,opt,name=vin,proto3" json:"vin,omitempty"`
+	// Required. Vehicle data.
+	Vehicle       *Vehicle `protobuf:"bytes,2,opt,name=vehicle,proto3" json:"vehicle,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateVehicleRequest) Reset() {
+	*x = UpdateVehicleRequest{}
+	mi := &file_base_v1_v10_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateVehicleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateVehicleRequest) ProtoMessage() {}
+
+func (x *UpdateVehicleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_base_v1_v10_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateVehicleRequest.ProtoReflect.Descriptor instead.
+func (*UpdateVehicleRequest) Descriptor() ([]byte, []int) {
+	return file_base_v1_v10_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UpdateVehicleRequest) GetVin() string {
+	if x != nil {
+		return x.Vin
+	}
+	return ""
+}
+
+func (x *UpdateVehicleRequest) GetVehicle() *Vehicle {
+	if x != nil {
+		return x.Vehicle
+	}
+	return nil
+}
+
 // Request message for the Do rpc.
 type DoRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -283,7 +337,7 @@ type DoRequest struct {
 
 func (x *DoRequest) Reset() {
 	*x = DoRequest{}
-	mi := &file_base_v1_v10_proto_msgTypes[5]
+	mi := &file_base_v1_v10_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -295,7 +349,7 @@ func (x *DoRequest) String() string {
 func (*DoRequest) ProtoMessage() {}
 
 func (x *DoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_base_v1_v10_proto_msgTypes[5]
+	mi := &file_base_v1_v10_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -308,7 +362,7 @@ func (x *DoRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoRequest.ProtoReflect.Descriptor instead.
 func (*DoRequest) Descriptor() ([]byte, []int) {
-	return file_base_v1_v10_proto_rawDescGZIP(), []int{5}
+	return file_base_v1_v10_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DoRequest) GetData() string {
@@ -328,7 +382,7 @@ type DoResponse struct {
 
 func (x *DoResponse) Reset() {
 	*x = DoResponse{}
-	mi := &file_base_v1_v10_proto_msgTypes[6]
+	mi := &file_base_v1_v10_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -340,7 +394,7 @@ func (x *DoResponse) String() string {
 func (*DoResponse) ProtoMessage() {}
 
 func (x *DoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_base_v1_v10_proto_msgTypes[6]
+	mi := &file_base_v1_v10_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -353,7 +407,7 @@ func (x *DoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoResponse.ProtoReflect.Descriptor instead.
 func (*DoResponse) Descriptor() ([]byte, []int) {
-	return file_base_v1_v10_proto_rawDescGZIP(), []int{6}
+	return file_base_v1_v10_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DoResponse) GetData() string {
@@ -382,18 +436,22 @@ const file_base_v1_v10_proto_rawDesc = "" +
 	"\x14ListVehiclesResponse\x125\n" +
 	"\bvehicles\x18\x01 \x03(\v2\x19.v10proto.base.v1.VehicleR\bvehicles\"(\n" +
 	"\x14DeleteVehicleRequest\x12\x10\n" +
-	"\x03vin\x18\x01 \x01(\tR\x03vin\"\x1f\n" +
+	"\x03vin\x18\x01 \x01(\tR\x03vin\"]\n" +
+	"\x14UpdateVehicleRequest\x12\x10\n" +
+	"\x03vin\x18\x01 \x01(\tR\x03vin\x123\n" +
+	"\avehicle\x18\x02 \x01(\v2\x19.v10proto.base.v1.VehicleR\avehicle\"\x1f\n" +
 	"\tDoRequest\x12\x12\n" +
 	"\x04data\x18\x01 \x01(\tR\x04data\" \n" +
 	"\n" +
 	"DoResponse\x12\x12\n" +
-	"\x04data\x18\x01 \x01(\tR\x04data2\xd5\x04\n" +
+	"\x04data\x18\x01 \x01(\tR\x04data2\xc5\x05\n" +
 	"\x03V10\x12V\n" +
 	"\x02Do\x12\x1b.v10proto.base.v1.DoRequest\x1a\x1c.v10proto.base.v1.DoResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
 	"/v10/v1:do\x12u\n" +
 	"\x0fRegisterVehicle\x12(.v10proto.base.v1.RegisterVehicleRequest\x1a\x16.google.protobuf.Empty\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/v10/vehicle/register\x12x\n" +
 	"\fListVehicles\x12%.v10proto.base.v1.ListVehiclesRequest\x1a&.v10proto.base.v1.ListVehiclesResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/v10/vehicle/list\x12k\n" +
-	"\rDeleteVehicle\x12&.v10proto.base.v1.DeleteVehicleRequest\x1a\x16.google.protobuf.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14*\x12/v10/vehicle/{vin}\x1a\x97\x01\x92A\x93\x01\x120(ALPHA) V10 API. Base URL: https://api.drival.ai\x1a_\n" +
+	"\rDeleteVehicle\x12&.v10proto.base.v1.DeleteVehicleRequest\x1a\x16.google.protobuf.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14*\x12/v10/vehicle/{vin}\x12n\n" +
+	"\rUpdateVehicle\x12&.v10proto.base.v1.UpdateVehicleRequest\x1a\x16.google.protobuf.Empty\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\x1a\x12/v10/vehicle/{vin}\x1a\x97\x01\x92A\x93\x01\x120(ALPHA) V10 API. Base URL: https://api.drival.ai\x1a_\n" +
 	"$See here for the service definition.\x127https://github.com/drival-ai/v10-proto/tree/main/v10/v1B\xbc\x05\x92A\x96\x05\x12\x81\x05\n" +
 	"\x11V10 API reference\x12\xe4\x04Drival AI's **V10** API is a RESTful API that can be accessed by an HTTP client such as `curl`, or any HTTP library which is part of most modern programming languages. This API reference is autogenerated from [protocol buffers](https://developers.google.com/protocol-buffers) defined in this [repository](https://github.com/drival-ai/v10-proto).\n" +
 	"\n" +
@@ -411,33 +469,37 @@ func file_base_v1_v10_proto_rawDescGZIP() []byte {
 	return file_base_v1_v10_proto_rawDescData
 }
 
-var file_base_v1_v10_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_base_v1_v10_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_base_v1_v10_proto_goTypes = []any{
 	(*Vehicle)(nil),                // 0: v10proto.base.v1.Vehicle
 	(*RegisterVehicleRequest)(nil), // 1: v10proto.base.v1.RegisterVehicleRequest
 	(*ListVehiclesRequest)(nil),    // 2: v10proto.base.v1.ListVehiclesRequest
 	(*ListVehiclesResponse)(nil),   // 3: v10proto.base.v1.ListVehiclesResponse
 	(*DeleteVehicleRequest)(nil),   // 4: v10proto.base.v1.DeleteVehicleRequest
-	(*DoRequest)(nil),              // 5: v10proto.base.v1.DoRequest
-	(*DoResponse)(nil),             // 6: v10proto.base.v1.DoResponse
-	(*emptypb.Empty)(nil),          // 7: google.protobuf.Empty
+	(*UpdateVehicleRequest)(nil),   // 5: v10proto.base.v1.UpdateVehicleRequest
+	(*DoRequest)(nil),              // 6: v10proto.base.v1.DoRequest
+	(*DoResponse)(nil),             // 7: v10proto.base.v1.DoResponse
+	(*emptypb.Empty)(nil),          // 8: google.protobuf.Empty
 }
 var file_base_v1_v10_proto_depIdxs = []int32{
 	0, // 0: v10proto.base.v1.RegisterVehicleRequest.vehicle:type_name -> v10proto.base.v1.Vehicle
 	0, // 1: v10proto.base.v1.ListVehiclesResponse.vehicles:type_name -> v10proto.base.v1.Vehicle
-	5, // 2: v10proto.base.v1.V10.Do:input_type -> v10proto.base.v1.DoRequest
-	1, // 3: v10proto.base.v1.V10.RegisterVehicle:input_type -> v10proto.base.v1.RegisterVehicleRequest
-	2, // 4: v10proto.base.v1.V10.ListVehicles:input_type -> v10proto.base.v1.ListVehiclesRequest
-	4, // 5: v10proto.base.v1.V10.DeleteVehicle:input_type -> v10proto.base.v1.DeleteVehicleRequest
-	6, // 6: v10proto.base.v1.V10.Do:output_type -> v10proto.base.v1.DoResponse
-	7, // 7: v10proto.base.v1.V10.RegisterVehicle:output_type -> google.protobuf.Empty
-	3, // 8: v10proto.base.v1.V10.ListVehicles:output_type -> v10proto.base.v1.ListVehiclesResponse
-	7, // 9: v10proto.base.v1.V10.DeleteVehicle:output_type -> google.protobuf.Empty
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 2: v10proto.base.v1.UpdateVehicleRequest.vehicle:type_name -> v10proto.base.v1.Vehicle
+	6, // 3: v10proto.base.v1.V10.Do:input_type -> v10proto.base.v1.DoRequest
+	1, // 4: v10proto.base.v1.V10.RegisterVehicle:input_type -> v10proto.base.v1.RegisterVehicleRequest
+	2, // 5: v10proto.base.v1.V10.ListVehicles:input_type -> v10proto.base.v1.ListVehiclesRequest
+	4, // 6: v10proto.base.v1.V10.DeleteVehicle:input_type -> v10proto.base.v1.DeleteVehicleRequest
+	5, // 7: v10proto.base.v1.V10.UpdateVehicle:input_type -> v10proto.base.v1.UpdateVehicleRequest
+	7, // 8: v10proto.base.v1.V10.Do:output_type -> v10proto.base.v1.DoResponse
+	8, // 9: v10proto.base.v1.V10.RegisterVehicle:output_type -> google.protobuf.Empty
+	3, // 10: v10proto.base.v1.V10.ListVehicles:output_type -> v10proto.base.v1.ListVehiclesResponse
+	8, // 11: v10proto.base.v1.V10.DeleteVehicle:output_type -> google.protobuf.Empty
+	8, // 12: v10proto.base.v1.V10.UpdateVehicle:output_type -> google.protobuf.Empty
+	8, // [8:13] is the sub-list for method output_type
+	3, // [3:8] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_base_v1_v10_proto_init() }
@@ -451,7 +513,7 @@ func file_base_v1_v10_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_base_v1_v10_proto_rawDesc), len(file_base_v1_v10_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
