@@ -1,4 +1,4 @@
-# github.com/drival-ai/v10-go v0.1.7
+# github.com/drival-ai/v10-go v0.1.8
 ## explicit; go 1.23.0
 github.com/drival-ai/v10-go/base/v1
 github.com/drival-ai/v10-go/conn

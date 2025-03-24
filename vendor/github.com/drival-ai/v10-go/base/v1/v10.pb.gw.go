@@ -109,13 +109,13 @@ func request_V10_DeleteVehicle_0(ctx context.Context, marshaler runtime.Marshale
 		err      error
 	)
 	io.Copy(io.Discard, req.Body)
-	val, ok := pathParams["id"]
+	val, ok := pathParams["vin"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vin")
 	}
-	protoReq.Id, err = runtime.String(val)
+	protoReq.Vin, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vin", err)
 	}
 	msg, err := client.DeleteVehicle(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -127,13 +127,13 @@ func local_request_V10_DeleteVehicle_0(ctx context.Context, marshaler runtime.Ma
 		metadata runtime.ServerMetadata
 		err      error
 	)
-	val, ok := pathParams["id"]
+	val, ok := pathParams["vin"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "vin")
 	}
-	protoReq.Id, err = runtime.String(val)
+	protoReq.Vin, err = runtime.String(val)
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "vin", err)
 	}
 	msg, err := server.DeleteVehicle(ctx, &protoReq)
 	return msg, metadata, err
@@ -211,7 +211,7 @@ func RegisterV10HandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/v10proto.base.v1.V10/DeleteVehicle", runtime.WithHTTPPathPattern("/v10/vehicle/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/v10proto.base.v1.V10/DeleteVehicle", runtime.WithHTTPPathPattern("/v10/vehicle/{vin}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -320,7 +320,7 @@ func RegisterV10HandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/v10proto.base.v1.V10/DeleteVehicle", runtime.WithHTTPPathPattern("/v10/vehicle/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/v10proto.base.v1.V10/DeleteVehicle", runtime.WithHTTPPathPattern("/v10/vehicle/{vin}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -340,7 +340,7 @@ var (
 	pattern_V10_Do_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v10", "v1"}, "do"))
 	pattern_V10_RegisterVehicle_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v10", "vehicle", "register"}, ""))
 	pattern_V10_ListVehicles_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v10", "vehicle", "list"}, ""))
-	pattern_V10_DeleteVehicle_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v10", "vehicle", "id"}, ""))
+	pattern_V10_DeleteVehicle_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v10", "vehicle", "vin"}, ""))
 )
 
 var (
