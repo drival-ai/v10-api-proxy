@@ -20,11 +20,14 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	V10_Do_FullMethodName              = "/v10proto.base.v1.V10/Do"
-	V10_RegisterVehicle_FullMethodName = "/v10proto.base.v1.V10/RegisterVehicle"
-	V10_ListVehicles_FullMethodName    = "/v10proto.base.v1.V10/ListVehicles"
-	V10_DeleteVehicle_FullMethodName   = "/v10proto.base.v1.V10/DeleteVehicle"
-	V10_UpdateVehicle_FullMethodName   = "/v10proto.base.v1.V10/UpdateVehicle"
+	V10_Do_FullMethodName                 = "/v10proto.base.v1.V10/Do"
+	V10_RegisterVehicle_FullMethodName    = "/v10proto.base.v1.V10/RegisterVehicle"
+	V10_ListVehicles_FullMethodName       = "/v10proto.base.v1.V10/ListVehicles"
+	V10_DeleteVehicle_FullMethodName      = "/v10proto.base.v1.V10/DeleteVehicle"
+	V10_UpdateVehicle_FullMethodName      = "/v10proto.base.v1.V10/UpdateVehicle"
+	V10_UpdateUserMetadata_FullMethodName = "/v10proto.base.v1.V10/UpdateUserMetadata"
+	V10_GetUserMetadata_FullMethodName    = "/v10proto.base.v1.V10/GetUserMetadata"
+	V10_StartTrip_FullMethodName          = "/v10proto.base.v1.V10/StartTrip"
 )
 
 // V10Client is the client API for V10 service.
@@ -43,6 +46,12 @@ type V10Client interface {
 	DeleteVehicle(ctx context.Context, in *DeleteVehicleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Update vehicle by VIN.
 	UpdateVehicle(ctx context.Context, in *UpdateVehicleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Update user metadata by id.
+	UpdateUserMetadata(ctx context.Context, in *UpdateUserMetadataRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Get user metadata by id.
+	GetUserMetadata(ctx context.Context, in *GetUserMetadataRequest, opts ...grpc.CallOption) (*GetUserMetadataResponse, error)
+	// Start a trip.
+	StartTrip(ctx context.Context, in *StartTripRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type v10Client struct {
@@ -103,6 +112,36 @@ func (c *v10Client) UpdateVehicle(ctx context.Context, in *UpdateVehicleRequest,
 	return out, nil
 }
 
+func (c *v10Client) UpdateUserMetadata(ctx context.Context, in *UpdateUserMetadataRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, V10_UpdateUserMetadata_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v10Client) GetUserMetadata(ctx context.Context, in *GetUserMetadataRequest, opts ...grpc.CallOption) (*GetUserMetadataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserMetadataResponse)
+	err := c.cc.Invoke(ctx, V10_GetUserMetadata_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *v10Client) StartTrip(ctx context.Context, in *StartTripRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, V10_StartTrip_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V10Server is the server API for V10 service.
 // All implementations must embed UnimplementedV10Server
 // for forward compatibility
@@ -119,6 +158,12 @@ type V10Server interface {
 	DeleteVehicle(context.Context, *DeleteVehicleRequest) (*emptypb.Empty, error)
 	// Update vehicle by VIN.
 	UpdateVehicle(context.Context, *UpdateVehicleRequest) (*emptypb.Empty, error)
+	// Update user metadata by id.
+	UpdateUserMetadata(context.Context, *UpdateUserMetadataRequest) (*emptypb.Empty, error)
+	// Get user metadata by id.
+	GetUserMetadata(context.Context, *GetUserMetadataRequest) (*GetUserMetadataResponse, error)
+	// Start a trip.
+	StartTrip(context.Context, *StartTripRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedV10Server()
 }
 
@@ -140,6 +185,15 @@ func (UnimplementedV10Server) DeleteVehicle(context.Context, *DeleteVehicleReque
 }
 func (UnimplementedV10Server) UpdateVehicle(context.Context, *UpdateVehicleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateVehicle not implemented")
+}
+func (UnimplementedV10Server) UpdateUserMetadata(context.Context, *UpdateUserMetadataRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserMetadata not implemented")
+}
+func (UnimplementedV10Server) GetUserMetadata(context.Context, *GetUserMetadataRequest) (*GetUserMetadataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserMetadata not implemented")
+}
+func (UnimplementedV10Server) StartTrip(context.Context, *StartTripRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartTrip not implemented")
 }
 func (UnimplementedV10Server) mustEmbedUnimplementedV10Server() {}
 
@@ -244,6 +298,60 @@ func _V10_UpdateVehicle_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _V10_UpdateUserMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V10Server).UpdateUserMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V10_UpdateUserMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V10Server).UpdateUserMetadata(ctx, req.(*UpdateUserMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V10_GetUserMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V10Server).GetUserMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V10_GetUserMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V10Server).GetUserMetadata(ctx, req.(*GetUserMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _V10_StartTrip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartTripRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V10Server).StartTrip(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V10_StartTrip_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V10Server).StartTrip(ctx, req.(*StartTripRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V10_ServiceDesc is the grpc.ServiceDesc for V10 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -270,6 +378,18 @@ var V10_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateVehicle",
 			Handler:    _V10_UpdateVehicle_Handler,
+		},
+		{
+			MethodName: "UpdateUserMetadata",
+			Handler:    _V10_UpdateUserMetadata_Handler,
+		},
+		{
+			MethodName: "GetUserMetadata",
+			Handler:    _V10_GetUserMetadata_Handler,
+		},
+		{
+			MethodName: "StartTrip",
+			Handler:    _V10_StartTrip_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
