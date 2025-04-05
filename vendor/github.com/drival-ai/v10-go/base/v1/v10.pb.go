@@ -691,6 +691,7 @@ type Trip struct {
 	EndTime       string                 `protobuf:"bytes,4,opt,name=endTime,proto3" json:"endTime,omitempty"`
 	Distance      float32                `protobuf:"fixed32,5,opt,name=distance,proto3" json:"distance,omitempty"`
 	Points        int32                  `protobuf:"varint,6,opt,name=points,proto3" json:"points,omitempty"`
+	MapSnapshot   string                 `protobuf:"bytes,7,opt,name=mapSnapshot,proto3" json:"mapSnapshot,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -767,6 +768,13 @@ func (x *Trip) GetPoints() int32 {
 	return 0
 }
 
+func (x *Trip) GetMapSnapshot() string {
+	if x != nil {
+		return x.MapSnapshot
+	}
+	return ""
+}
+
 type EndTripRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Required. Trip ID to end.
@@ -777,6 +785,7 @@ type EndTripRequest struct {
 	Points int32 `protobuf:"varint,3,opt,name=points,proto3" json:"points,omitempty"`
 	// Required. End time of the trip.
 	EndTime       string `protobuf:"bytes,4,opt,name=endTime,proto3" json:"endTime,omitempty"`
+	MapSnapshot   string `protobuf:"bytes,5,opt,name=mapSnapshot,proto3" json:"mapSnapshot,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -835,6 +844,13 @@ func (x *EndTripRequest) GetPoints() int32 {
 func (x *EndTripRequest) GetEndTime() string {
 	if x != nil {
 		return x.EndTime
+	}
+	return ""
+}
+
+func (x *EndTripRequest) GetMapSnapshot() string {
+	if x != nil {
+		return x.MapSnapshot
 	}
 	return ""
 }
@@ -1050,19 +1066,21 @@ const file_base_v1_v10_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"O\n" +
 	"\x11UpdateTripRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12*\n" +
-	"\x04trip\x18\x02 \x01(\v2\x16.v10proto.base.v1.TripR\x04trip\"\x94\x01\n" +
+	"\x04trip\x18\x02 \x01(\v2\x16.v10proto.base.v1.TripR\x04trip\"\xb6\x01\n" +
 	"\x04Trip\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
 	"\x03vin\x18\x02 \x01(\tR\x03vin\x12\x1c\n" +
 	"\tstartTime\x18\x03 \x01(\tR\tstartTime\x12\x18\n" +
 	"\aendTime\x18\x04 \x01(\tR\aendTime\x12\x1a\n" +
 	"\bdistance\x18\x05 \x01(\x02R\bdistance\x12\x16\n" +
-	"\x06points\x18\x06 \x01(\x05R\x06points\"n\n" +
+	"\x06points\x18\x06 \x01(\x05R\x06points\x12 \n" +
+	"\vmapSnapshot\x18\a \x01(\tR\vmapSnapshot\"\x90\x01\n" +
 	"\x0eEndTripRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bdistance\x18\x02 \x01(\x02R\bdistance\x12\x16\n" +
 	"\x06points\x18\x03 \x01(\x05R\x06points\x12\x18\n" +
-	"\aendTime\x18\x04 \x01(\tR\aendTime\"\x12\n" +
+	"\aendTime\x18\x04 \x01(\tR\aendTime\x12 \n" +
+	"\vmapSnapshot\x18\x05 \x01(\tR\vmapSnapshot\"\x12\n" +
 	"\x10ListTripsRequest\"A\n" +
 	"\x11ListTripsResponse\x12,\n" +
 	"\x05trips\x18\x01 \x03(\v2\x16.v10proto.base.v1.TripR\x05trips\"\x1f\n" +
