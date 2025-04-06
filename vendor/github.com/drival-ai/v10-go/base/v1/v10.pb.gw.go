@@ -83,23 +83,22 @@ func local_request_V10_RegisterVehicle_0(ctx context.Context, marshaler runtime.
 	return msg, metadata, err
 }
 
-func request_V10_ListVehicles_0(ctx context.Context, marshaler runtime.Marshaler, client V10Client, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_V10_ListVehicles_0(ctx context.Context, marshaler runtime.Marshaler, client V10Client, req *http.Request, pathParams map[string]string) (V10_ListVehiclesClient, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListVehiclesRequest
 		metadata runtime.ServerMetadata
 	)
 	io.Copy(io.Discard, req.Body)
-	msg, err := client.ListVehicles(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_V10_ListVehicles_0(ctx context.Context, marshaler runtime.Marshaler, server V10Server, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListVehiclesRequest
-		metadata runtime.ServerMetadata
-	)
-	msg, err := server.ListVehicles(ctx, &protoReq)
-	return msg, metadata, err
+	stream, err := client.ListVehicles(ctx, &protoReq)
+	if err != nil {
+		return nil, metadata, err
+	}
+	header, err := stream.Header()
+	if err != nil {
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, nil
 }
 
 func request_V10_DeleteVehicle_0(ctx context.Context, marshaler runtime.Marshaler, client V10Client, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -350,23 +349,22 @@ func local_request_V10_EndTrip_0(ctx context.Context, marshaler runtime.Marshale
 	return msg, metadata, err
 }
 
-func request_V10_ListTrips_0(ctx context.Context, marshaler runtime.Marshaler, client V10Client, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_V10_ListTrips_0(ctx context.Context, marshaler runtime.Marshaler, client V10Client, req *http.Request, pathParams map[string]string) (V10_ListTripsClient, runtime.ServerMetadata, error) {
 	var (
 		protoReq ListTripsRequest
 		metadata runtime.ServerMetadata
 	)
 	io.Copy(io.Discard, req.Body)
-	msg, err := client.ListTrips(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_V10_ListTrips_0(ctx context.Context, marshaler runtime.Marshaler, server V10Server, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq ListTripsRequest
-		metadata runtime.ServerMetadata
-	)
-	msg, err := server.ListTrips(ctx, &protoReq)
-	return msg, metadata, err
+	stream, err := client.ListTrips(ctx, &protoReq)
+	if err != nil {
+		return nil, metadata, err
+	}
+	header, err := stream.Header()
+	if err != nil {
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, nil
 }
 
 // RegisterV10HandlerServer registers the http handlers for service V10 to "mux".
@@ -415,25 +413,12 @@ func RegisterV10HandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 		}
 		forward_V10_RegisterVehicle_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+
 	mux.Handle(http.MethodGet, pattern_V10_ListVehicles_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/v10proto.base.v1.V10/ListVehicles", runtime.WithHTTPPathPattern("/v10/vehicle/list"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_V10_ListVehicles_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_V10_ListVehicles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
 	})
 	mux.Handle(http.MethodDelete, pattern_V10_DeleteVehicle_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -575,25 +560,12 @@ func RegisterV10HandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 		}
 		forward_V10_EndTrip_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+
 	mux.Handle(http.MethodGet, pattern_V10_ListTrips_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/v10proto.base.v1.V10/ListTrips", runtime.WithHTTPPathPattern("/v10/trip/list"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_V10_ListTrips_0(annotatedContext, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_V10_ListTrips_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
 	})
 
 	return nil
@@ -684,7 +656,7 @@ func RegisterV10HandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_V10_ListVehicles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_V10_ListVehicles_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodDelete, pattern_V10_DeleteVehicle_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -820,7 +792,7 @@ func RegisterV10HandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_V10_ListTrips_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_V10_ListTrips_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
@@ -842,7 +814,7 @@ var (
 var (
 	forward_V10_Do_0                 = runtime.ForwardResponseMessage
 	forward_V10_RegisterVehicle_0    = runtime.ForwardResponseMessage
-	forward_V10_ListVehicles_0       = runtime.ForwardResponseMessage
+	forward_V10_ListVehicles_0       = runtime.ForwardResponseStream
 	forward_V10_DeleteVehicle_0      = runtime.ForwardResponseMessage
 	forward_V10_UpdateVehicle_0      = runtime.ForwardResponseMessage
 	forward_V10_UpdateUserMetadata_0 = runtime.ForwardResponseMessage
@@ -850,5 +822,5 @@ var (
 	forward_V10_StartTrip_0          = runtime.ForwardResponseMessage
 	forward_V10_UpdateTrip_0         = runtime.ForwardResponseMessage
 	forward_V10_EndTrip_0            = runtime.ForwardResponseMessage
-	forward_V10_ListTrips_0          = runtime.ForwardResponseMessage
+	forward_V10_ListTrips_0          = runtime.ForwardResponseStream
 )

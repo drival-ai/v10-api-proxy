@@ -44,7 +44,7 @@ type V10Client interface {
 	// Vehicle manual registration endpoint.
 	RegisterVehicle(ctx context.Context, in *RegisterVehicleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// List vehicles owned by the user.
-	ListVehicles(ctx context.Context, in *ListVehiclesRequest, opts ...grpc.CallOption) (*ListVehiclesResponse, error)
+	ListVehicles(ctx context.Context, in *ListVehiclesRequest, opts ...grpc.CallOption) (V10_ListVehiclesClient, error)
 	// Delete vehicle by VIN.
 	DeleteVehicle(ctx context.Context, in *DeleteVehicleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Update vehicle by VIN.
@@ -60,7 +60,7 @@ type V10Client interface {
 	// End a trip.
 	EndTrip(ctx context.Context, in *EndTripRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// List trips.
-	ListTrips(ctx context.Context, in *ListTripsRequest, opts ...grpc.CallOption) (*ListTripsResponse, error)
+	ListTrips(ctx context.Context, in *ListTripsRequest, opts ...grpc.CallOption) (V10_ListTripsClient, error)
 }
 
 type v10Client struct {
@@ -91,14 +91,37 @@ func (c *v10Client) RegisterVehicle(ctx context.Context, in *RegisterVehicleRequ
 	return out, nil
 }
 
-func (c *v10Client) ListVehicles(ctx context.Context, in *ListVehiclesRequest, opts ...grpc.CallOption) (*ListVehiclesResponse, error) {
+func (c *v10Client) ListVehicles(ctx context.Context, in *ListVehiclesRequest, opts ...grpc.CallOption) (V10_ListVehiclesClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListVehiclesResponse)
-	err := c.cc.Invoke(ctx, V10_ListVehicles_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V10_ServiceDesc.Streams[0], V10_ListVehicles_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &v10ListVehiclesClient{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type V10_ListVehiclesClient interface {
+	Recv() (*Vehicle, error)
+	grpc.ClientStream
+}
+
+type v10ListVehiclesClient struct {
+	grpc.ClientStream
+}
+
+func (x *v10ListVehiclesClient) Recv() (*Vehicle, error) {
+	m := new(Vehicle)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 func (c *v10Client) DeleteVehicle(ctx context.Context, in *DeleteVehicleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -171,14 +194,37 @@ func (c *v10Client) EndTrip(ctx context.Context, in *EndTripRequest, opts ...grp
 	return out, nil
 }
 
-func (c *v10Client) ListTrips(ctx context.Context, in *ListTripsRequest, opts ...grpc.CallOption) (*ListTripsResponse, error) {
+func (c *v10Client) ListTrips(ctx context.Context, in *ListTripsRequest, opts ...grpc.CallOption) (V10_ListTripsClient, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListTripsResponse)
-	err := c.cc.Invoke(ctx, V10_ListTrips_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &V10_ServiceDesc.Streams[1], V10_ListTrips_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &v10ListTripsClient{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type V10_ListTripsClient interface {
+	Recv() (*Trip, error)
+	grpc.ClientStream
+}
+
+type v10ListTripsClient struct {
+	grpc.ClientStream
+}
+
+func (x *v10ListTripsClient) Recv() (*Trip, error) {
+	m := new(Trip)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // V10Server is the server API for V10 service.
@@ -192,7 +238,7 @@ type V10Server interface {
 	// Vehicle manual registration endpoint.
 	RegisterVehicle(context.Context, *RegisterVehicleRequest) (*emptypb.Empty, error)
 	// List vehicles owned by the user.
-	ListVehicles(context.Context, *ListVehiclesRequest) (*ListVehiclesResponse, error)
+	ListVehicles(*ListVehiclesRequest, V10_ListVehiclesServer) error
 	// Delete vehicle by VIN.
 	DeleteVehicle(context.Context, *DeleteVehicleRequest) (*emptypb.Empty, error)
 	// Update vehicle by VIN.
@@ -208,7 +254,7 @@ type V10Server interface {
 	// End a trip.
 	EndTrip(context.Context, *EndTripRequest) (*emptypb.Empty, error)
 	// List trips.
-	ListTrips(context.Context, *ListTripsRequest) (*ListTripsResponse, error)
+	ListTrips(*ListTripsRequest, V10_ListTripsServer) error
 	mustEmbedUnimplementedV10Server()
 }
 
@@ -222,8 +268,8 @@ func (UnimplementedV10Server) Do(context.Context, *DoRequest) (*DoResponse, erro
 func (UnimplementedV10Server) RegisterVehicle(context.Context, *RegisterVehicleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterVehicle not implemented")
 }
-func (UnimplementedV10Server) ListVehicles(context.Context, *ListVehiclesRequest) (*ListVehiclesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListVehicles not implemented")
+func (UnimplementedV10Server) ListVehicles(*ListVehiclesRequest, V10_ListVehiclesServer) error {
+	return status.Errorf(codes.Unimplemented, "method ListVehicles not implemented")
 }
 func (UnimplementedV10Server) DeleteVehicle(context.Context, *DeleteVehicleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteVehicle not implemented")
@@ -246,8 +292,8 @@ func (UnimplementedV10Server) UpdateTrip(context.Context, *UpdateTripRequest) (*
 func (UnimplementedV10Server) EndTrip(context.Context, *EndTripRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EndTrip not implemented")
 }
-func (UnimplementedV10Server) ListTrips(context.Context, *ListTripsRequest) (*ListTripsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListTrips not implemented")
+func (UnimplementedV10Server) ListTrips(*ListTripsRequest, V10_ListTripsServer) error {
+	return status.Errorf(codes.Unimplemented, "method ListTrips not implemented")
 }
 func (UnimplementedV10Server) mustEmbedUnimplementedV10Server() {}
 
@@ -298,22 +344,25 @@ func _V10_RegisterVehicle_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V10_ListVehicles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListVehiclesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
+func _V10_ListVehicles_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ListVehiclesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(V10Server).ListVehicles(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V10_ListVehicles_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V10Server).ListVehicles(ctx, req.(*ListVehiclesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(V10Server).ListVehicles(m, &v10ListVehiclesServer{ServerStream: stream})
+}
+
+type V10_ListVehiclesServer interface {
+	Send(*Vehicle) error
+	grpc.ServerStream
+}
+
+type v10ListVehiclesServer struct {
+	grpc.ServerStream
+}
+
+func (x *v10ListVehiclesServer) Send(m *Vehicle) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 func _V10_DeleteVehicle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -442,22 +491,25 @@ func _V10_EndTrip_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _V10_ListTrips_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListTripsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
+func _V10_ListTrips_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ListTripsRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(V10Server).ListTrips(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: V10_ListTrips_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(V10Server).ListTrips(ctx, req.(*ListTripsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(V10Server).ListTrips(m, &v10ListTripsServer{ServerStream: stream})
+}
+
+type V10_ListTripsServer interface {
+	Send(*Trip) error
+	grpc.ServerStream
+}
+
+type v10ListTripsServer struct {
+	grpc.ServerStream
+}
+
+func (x *v10ListTripsServer) Send(m *Trip) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 // V10_ServiceDesc is the grpc.ServiceDesc for V10 service.
@@ -474,10 +526,6 @@ var V10_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterVehicle",
 			Handler:    _V10_RegisterVehicle_Handler,
-		},
-		{
-			MethodName: "ListVehicles",
-			Handler:    _V10_ListVehicles_Handler,
 		},
 		{
 			MethodName: "DeleteVehicle",
@@ -507,11 +555,18 @@ var V10_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "EndTrip",
 			Handler:    _V10_EndTrip_Handler,
 		},
+	},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "ListTrips",
-			Handler:    _V10_ListTrips_Handler,
+			StreamName:    "ListVehicles",
+			Handler:       _V10_ListVehicles_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ListTrips",
+			Handler:       _V10_ListTrips_Handler,
+			ServerStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "base/v1/v10.proto",
 }
