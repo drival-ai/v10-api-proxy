@@ -3,7 +3,7 @@ module github.com/drival-ai/v10-api-proxy
 go 1.24.1
 
 require (
-	github.com/drival-ai/v10-go v0.1.19
+	github.com/drival-ai/v10-go v0.1.20
 	github.com/golang/glog v1.2.4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	google.golang.org/grpc v1.71.0

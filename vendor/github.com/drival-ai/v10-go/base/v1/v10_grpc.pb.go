@@ -31,6 +31,7 @@ const (
 	V10_UpdateTrip_FullMethodName         = "/v10proto.base.v1.V10/UpdateTrip"
 	V10_EndTrip_FullMethodName            = "/v10proto.base.v1.V10/EndTrip"
 	V10_ListTrips_FullMethodName          = "/v10proto.base.v1.V10/ListTrips"
+	V10_DeleteTrip_FullMethodName         = "/v10proto.base.v1.V10/DeleteTrip"
 )
 
 // V10Client is the client API for V10 service.
@@ -61,6 +62,8 @@ type V10Client interface {
 	EndTrip(ctx context.Context, in *EndTripRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// List trips.
 	ListTrips(ctx context.Context, in *ListTripsRequest, opts ...grpc.CallOption) (V10_ListTripsClient, error)
+	// Deletes a trip by id.
+	DeleteTrip(ctx context.Context, in *DeleteTripRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type v10Client struct {
@@ -227,6 +230,16 @@ func (x *v10ListTripsClient) Recv() (*Trip, error) {
 	return m, nil
 }
 
+func (c *v10Client) DeleteTrip(ctx context.Context, in *DeleteTripRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, V10_DeleteTrip_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // V10Server is the server API for V10 service.
 // All implementations must embed UnimplementedV10Server
 // for forward compatibility
@@ -255,6 +268,8 @@ type V10Server interface {
 	EndTrip(context.Context, *EndTripRequest) (*emptypb.Empty, error)
 	// List trips.
 	ListTrips(*ListTripsRequest, V10_ListTripsServer) error
+	// Deletes a trip by id.
+	DeleteTrip(context.Context, *DeleteTripRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedV10Server()
 }
 
@@ -294,6 +309,9 @@ func (UnimplementedV10Server) EndTrip(context.Context, *EndTripRequest) (*emptyp
 }
 func (UnimplementedV10Server) ListTrips(*ListTripsRequest, V10_ListTripsServer) error {
 	return status.Errorf(codes.Unimplemented, "method ListTrips not implemented")
+}
+func (UnimplementedV10Server) DeleteTrip(context.Context, *DeleteTripRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTrip not implemented")
 }
 func (UnimplementedV10Server) mustEmbedUnimplementedV10Server() {}
 
@@ -512,6 +530,24 @@ func (x *v10ListTripsServer) Send(m *Trip) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _V10_DeleteTrip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTripRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(V10Server).DeleteTrip(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: V10_DeleteTrip_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(V10Server).DeleteTrip(ctx, req.(*DeleteTripRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // V10_ServiceDesc is the grpc.ServiceDesc for V10 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -554,6 +590,10 @@ var V10_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EndTrip",
 			Handler:    _V10_EndTrip_Handler,
+		},
+		{
+			MethodName: "DeleteTrip",
+			Handler:    _V10_DeleteTrip_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
